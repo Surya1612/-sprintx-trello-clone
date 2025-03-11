@@ -21,12 +21,14 @@ interface TAddBoardProps {
     name: string
   ) => void;
   newBoard: { title: string; background: string };
+  onSubmit: () => void;
 }
 
 export const AddBoardPopover = ({
   handleClose,
   handleFormData,
   newBoard,
+  onSubmit,
 }: TAddBoardProps) => {
   return (
     <Popover
@@ -96,6 +98,7 @@ export const AddBoardPopover = ({
         variant="contained"
         sx={{ marginTop: "16px", textTransform: "capitalize" }}
         disabled={!newBoard.title}
+        onClick={() => onSubmit()}
       >
         Create
       </Button>

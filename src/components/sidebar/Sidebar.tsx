@@ -3,6 +3,8 @@ import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
 
 import { AddBoardPopover } from "../board/AddBoardPopover";
+import { useBoardStore } from "../../store/boardStore";
+import { Board } from "../../types/boardTypes";
 
 interface TNewBoard {
   title: string;
@@ -15,6 +17,8 @@ export const Sidebar = () => {
     background: "from-cyan-600 to-blue-600",
   });
   const [showBoard, setShowBoard] = useState(false);
+  const boards = useBoardStore((state) => state.boards);
+  const addBoard = useBoardStore((state) => state.addBoard);
 
   const handleFormData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string,
@@ -26,7 +30,15 @@ export const Sidebar = () => {
 
   const handleClose = () => {
     setShowBoard(false);
+    setNewBoard({ title: "", background: "from-cyan-600 to-blue-600" });
   };
+
+  const onSubmit = () => {
+    addBoard({ title: newBoard.title, color: newBoard.background });
+    handleClose();
+  };
+
+  console.log(boards, "ss");
 
   return (
     <div className="w-[260px] bg-[#7d2650]  h-[calc(100vh-48px)]">
@@ -52,16 +64,28 @@ export const Sidebar = () => {
             <AddIcon fontSize="small" sx={{ color: "#FFF" }} />
           </IconButton>
         </div>
-        <div className="flex items-center gap-2 py-2">
-          <div className="bg-gradient-to-r border from-cyan-500 to-blue-500 px-4 py-2 rounded-md font-semibold text-white h-6 w-6" />
-          <p className="text-sm text-white">Sample Board</p>
-        </div>
+        {boards.length > 0 ? (
+          boards.map((board: Board) => (
+            <div key={board.id} className="flex items-center gap-2 py-2">
+              <div
+                className={`bg-gradient-to-r border ${board.color} px-4 py-2 rounded-md font-semibold text-white h-6 w-6`}
+              />
+              <p className="text-sm text-white">{board.title}</p>
+            </div>
+          ))
+        ) : (
+          <p className="font-semibold text-sm text-white">
+            No Boards Available
+          </p>
+        )}
       </div>
+
       {showBoard && (
         <AddBoardPopover
           handleClose={handleClose}
           handleFormData={handleFormData}
           newBoard={newBoard}
+          onSubmit={onSubmit}
         />
       )}
     </div>
