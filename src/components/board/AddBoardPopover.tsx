@@ -9,7 +9,7 @@ const gradients = [
   "from-red-600 to-orange-600",
   "from-indigo-600 to-fuchsia-600",
   "from-rose-600 to-amber-600",
-  "from-gray-800 to-gray-900",
+  "from-gray-600 to-gray-900",
   "from-sky-600 to-indigo-700",
   "from-violet-600 to-blue-700",
 ];
@@ -22,6 +22,7 @@ interface TAddBoardProps {
   ) => void;
   newBoard: { title: string; background: string };
   onSubmit: () => void;
+  anchorEl: HTMLElement | null;
 }
 
 export const AddBoardPopover = ({
@@ -29,22 +30,24 @@ export const AddBoardPopover = ({
   handleFormData,
   newBoard,
   onSubmit,
+  anchorEl,
 }: TAddBoardProps) => {
   return (
     <Popover
       open={true}
+      anchorEl={anchorEl}
       onClose={handleClose}
       anchorOrigin={{
-        vertical: "center",
+        vertical: "top",
         horizontal: "right",
       }}
       transformOrigin={{
-        vertical: "center",
+        vertical: "top",
         horizontal: "left",
       }}
       PaperProps={{
-        style: { width: "300px" },
-        className: "p-4 h-[80vh]",
+        style: { width: "300px", left: "20%" },
+        className: "p-4 h-[80vh] ",
       }}
     >
       <div className="flex items-center justify-between w-full">

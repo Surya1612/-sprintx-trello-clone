@@ -1,14 +1,16 @@
+import { useBoardStore } from "../../store/boardStore";
 import { AddColumn } from "./AddColumn";
 
 export const BoardView = () => {
+  const activeBoard = useBoardStore((state) => state.activeBoard);
+  const { title, color } = activeBoard;
+
   return (
-    <div className="flex-1">
-      <div className="bg-blue-900 p-4">
-        <p className="font-semibold text-xl text-white">Sample</p>
+    <div className={`flex-1 h-[calc(100vh-48 px)] bg-gradient-to-r ${color}`}>
+      <div className="p-4">
+        <p className="font-semibold text-xl text-white">{title}</p>
       </div>
-      <div>
-        <AddColumn />
-      </div>
+      <AddColumn />
     </div>
   );
 };

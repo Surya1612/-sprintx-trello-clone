@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AddBoardPopover } from "../board/AddBoardPopover";
 import { useBoardStore } from "../../store/boardStore";
 import { Board } from "../../types/boardTypes";
+import { v4 as uuidv4 } from "uuid";
 
 interface TNewBoard {
   title: string;
@@ -19,6 +20,9 @@ export const Sidebar = () => {
   const [showBoard, setShowBoard] = useState(false);
   const boards = useBoardStore((state) => state.boards);
   const addBoard = useBoardStore((state) => state.addBoard);
+  const activeBoard = useBoardStore((state) => state.activeBoard);
+  const setActiveBoard = useBoardStore((state) => state.setActiveBoard);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleFormData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string,
@@ -30,18 +34,30 @@ export const Sidebar = () => {
 
   const handleClose = () => {
     setShowBoard(false);
+    setAnchorEl(null);
     setNewBoard({ title: "", background: "from-cyan-600 to-blue-600" });
   };
 
   const onSubmit = () => {
-    addBoard({ title: newBoard.title, color: newBoard.background });
+    addBoard({
+      title: newBoard.title,
+      color: newBoard.background,
+      id: uuidv4(),
+    });
     handleClose();
   };
 
-  console.log(boards, "ss");
+  const handleActiveBoard = (boardId: string) => {
+    setActiveBoard(boardId);
+  };
+
+  const handleOpenBoard = (e: React.MouseEvent<HTMLElement>) => {
+    setShowBoard(true);
+    setAnchorEl(e.currentTarget as HTMLElement);
+  };
 
   return (
-    <div className="w-[260px] bg-[#7d2650]  h-[calc(100vh-48px)]">
+    <div className={`w-[260px] bg-gray-900 h-[calc(100vh-48px)]`}>
       <div className="flex p-4 border-b border-[#ffffff29] gap-2 items-center">
         <div className="bg-linear-to-r border from-cyan-500 to-blue-500 px-3.5 py-1.5 rounded-md font-semibold text-[#fff]">
           S
@@ -58,7 +74,7 @@ export const Sidebar = () => {
           <IconButton
             disableFocusRipple
             aria-label="Add"
-            onClick={() => setShowBoard(true)}
+            onClick={(e) => handleOpenBoard(e)}
             sx={{ marginLeft: "auto", cursor: "pointer" }}
           >
             <AddIcon fontSize="small" sx={{ color: "#FFF" }} />
@@ -66,7 +82,13 @@ export const Sidebar = () => {
         </div>
         {boards.length > 0 ? (
           boards.map((board: Board) => (
-            <div key={board.id} className="flex items-center gap-2 py-2">
+            <div
+              onClick={() => handleActiveBoard(board.id)}
+              key={board.id}
+              className={`flex items-center gap-2 px-2 rounded-md py-2 mt-2 cursor-pointer hover:bg-[#ffffff33] ${
+                board.id === activeBoard.id && "bg-[#ffffff33]"
+              }`}
+            >
               <div
                 className={`bg-gradient-to-r border ${board.color} px-4 py-2 rounded-md font-semibold text-white h-6 w-6`}
               />
@@ -82,6 +104,7 @@ export const Sidebar = () => {
 
       {showBoard && (
         <AddBoardPopover
+          anchorEl={anchorEl}
           handleClose={handleClose}
           handleFormData={handleFormData}
           newBoard={newBoard}

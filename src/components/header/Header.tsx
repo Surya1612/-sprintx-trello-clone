@@ -6,10 +6,11 @@ import SearchIcon from "@mui/icons-material/Search";
 
 export const Header = () => {
   return (
-    <div className="bg-[#7d2650] h-[48px] flex items-center gap-1 px-4 border-b border-[#ffffff29]">
+    <div
+      className={`bg-gray-900 h-[48px] flex items-center gap-1 px-4 border-b border-[#ffffff29]`}
+    >
       <AnalyticsOutlinedIcon sx={{ color: "#fff" }} />
       <p className="text-xl font-semibold text-white">SprintX</p>
-
       <div className="flex items-center ml-auto gap-3">
         <TextField
           size="small"

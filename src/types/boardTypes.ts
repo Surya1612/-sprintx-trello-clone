@@ -12,7 +12,7 @@ export type Column = {
 };
 
 export type Board = {
-  id?: string;
+  id: string;
   title: string;
   color: string;
   columns?: Column[];
