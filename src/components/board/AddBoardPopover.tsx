@@ -34,6 +34,7 @@ export const AddBoardPopover = ({
 }: TAddBoardProps) => {
   return (
     <Popover
+      sx={{ left: "22px" }}
       open={true}
       anchorEl={anchorEl}
       onClose={handleClose}
@@ -46,7 +47,7 @@ export const AddBoardPopover = ({
         horizontal: "left",
       }}
       PaperProps={{
-        style: { width: "300px", left: "20%" },
+        style: { width: "300px" },
         className: "p-4 h-[80vh] ",
       }}
     >
@@ -54,7 +55,14 @@ export const AddBoardPopover = ({
         <p className="font-semibold mx-auto text-sm">Create Board</p>
         <CloseIcon
           fontSize="small"
-          sx={{ color: "grey", cursor: "pointer" }}
+          sx={{
+            color: "#626f86",
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: "#F4F4F5",
+              borderRadius: "8px",
+            },
+          }}
           onClick={handleClose}
         />
       </div>

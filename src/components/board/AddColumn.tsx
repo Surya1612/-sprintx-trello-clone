@@ -8,7 +8,7 @@ export const AddColumn = () => {
 
   return (
     <div className="p-4 flex gap-4">
-      <div className="bg-white w-[300px] rounded-xl min-h-[120px] max-h-[100vh] flex flex-col">
+      <div className="bg-white w-[290px] rounded-xl min-h-[120px] max-h-[100vh] flex flex-col">
         <p className="p-3 font-semibold">TO DO</p>
         <div className="flex flex-col gap-2 px-3 overflow-y-auto flex-grow">
           {tasks.length > 0 ? (

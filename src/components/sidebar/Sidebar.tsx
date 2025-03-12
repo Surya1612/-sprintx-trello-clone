@@ -75,7 +75,10 @@ export const Sidebar = () => {
             disableFocusRipple
             aria-label="Add"
             onClick={(e) => handleOpenBoard(e)}
-            sx={{ marginLeft: "auto", cursor: "pointer" }}
+            sx={{
+              marginLeft: "auto",
+              cursor: "pointer",
+            }}
           >
             <AddIcon fontSize="small" sx={{ color: "#FFF" }} />
           </IconButton>
