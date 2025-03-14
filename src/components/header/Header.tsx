@@ -3,11 +3,20 @@ import { Avatar, InputAdornment, TextField } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HelpIcon from "@mui/icons-material/Help";
 import SearchIcon from "@mui/icons-material/Search";
+import { useBoardStore } from "../../store/boardStore";
+import { getDarkerShade, getHeaderColor } from "../../utils/helpherFunction";
 
 export const Header = () => {
+  const activeBoard = useBoardStore((state) => state.activeBoard);
+  const { color } = activeBoard;
+
+  const headerBgColor = getHeaderColor(color);
+  const darkShadeBg = getDarkerShade(headerBgColor);
+
   return (
     <div
-      className={`bg-gray-900 h-[48px] flex items-center gap-1 px-4 border-b border-[#ffffff29]`}
+      style={{ background: darkShadeBg }}
+      className={`h-[48px] flex items-center gap-1 px-4 border-b border-[#ffffff29]`}
     >
       <AnalyticsOutlinedIcon sx={{ color: "#fff" }} />
       <p className="text-xl font-semibold text-white">SprintX</p>
