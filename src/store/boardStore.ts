@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { Boards, Board } from "../types/boardTypes";
+import { Boards, Board, Column, Task } from "../types/boardTypes";
 
 type TBoardStore = {
   boards: Boards;
@@ -8,6 +8,8 @@ type TBoardStore = {
   setBoard: (payload: Boards) => void;
   addBoard: (payload: Board) => void;
   setActiveBoard: (payload: string) => void;
+  addColumn: (payload: Column) => void;
+  addTask: (payload: Task, columnId: string) => void;
 };
 
 export const useBoardStore = create<TBoardStore>((set) => ({
@@ -51,4 +53,46 @@ export const useBoardStore = create<TBoardStore>((set) => ({
       ],
       activeBoard: payload,
     })),
+
+  addColumn: (payload: Column) =>
+    set((state: TBoardStore) => {
+      const updateBoards = state.boards.map((board: Board) =>
+        board.id === state.activeBoard.id
+          ? {
+              ...board,
+              columns: [...board.columns, payload],
+            }
+          : board
+      );
+
+      const updatedActiveBoard = updateBoards.find(
+        (board: Board) => board.id === state.activeBoard.id
+      );
+
+      return {
+        boards: updateBoards,
+        activeBoard: updatedActiveBoard,
+      };
+    }),
+
+  addTask: (payload: Task, columnId: string) =>
+    set((state: TBoardStore) => {
+      const updatedColumns = state.activeBoard.columns?.map((c: Column) =>
+        c.id === columnId ? { ...c, tasks: [...(c.tasks || []), payload] } : c
+      );
+
+      const updatedActiveBoard = {
+        ...state.activeBoard,
+        columns: updatedColumns,
+      };
+
+      const updatedBoards = state.boards.map((board: Board) =>
+        board.id === state.activeBoard.id ? updatedActiveBoard : board
+      );
+
+      return {
+        activeBoard: updatedActiveBoard,
+        boards: updatedBoards,
+      };
+    }),
 }));

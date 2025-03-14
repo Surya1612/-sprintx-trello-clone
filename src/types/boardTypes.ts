@@ -1,7 +1,7 @@
 export type Task = {
   id: string;
   title: string;
-  description: string;
+  description?: string;
 };
 
 export type Column = {
@@ -15,7 +15,7 @@ export type Board = {
   id: string;
   title: string;
   color: string;
-  columns?: Column[];
+  columns: Column[];
 };
 
 export type Boards = Board[];
