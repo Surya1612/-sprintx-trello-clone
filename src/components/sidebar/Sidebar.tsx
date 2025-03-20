@@ -49,6 +49,7 @@ export const Sidebar = () => {
       title: newBoard.title,
       color: newBoard.background,
       id: uuidv4(),
+      columns: [],
     });
     handleClose();
   };

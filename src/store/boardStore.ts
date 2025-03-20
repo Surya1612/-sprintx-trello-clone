@@ -10,21 +10,51 @@ type TBoardStore = {
   setActiveBoard: (payload: string) => void;
   addColumn: (payload: Column) => void;
   addTask: (payload: Task, columnId: string) => void;
+  deleteTask: (columnId: string, taskId: string) => void;
+  deleteColumn: (columnId: string) => void;
 };
 
 export const useBoardStore = create<TBoardStore>((set) => ({
   activeBoard: {
-    id: "36542010-990-4a98-bf6a-dd97d1ab0191",
-    title: "Test",
-    color: "from-gray-600 to-gray-900",
-    columns: [],
+    id: "36542010-0a05-4a98-bf6a-dd97d1ab0191",
+    title: "Sample",
+    color: "from-cyan-600 to-blue-600",
+    columns: [
+      {
+        id: "36542010-surya16-4a98-bf6a-dd97d1ab0191",
+        title: "TODO",
+        color: "",
+        tasks: [
+          {
+            id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
+            title: "UI Changes",
+          },
+          {
+            id: "36542010-lek5-4a98-bf6a-dd97d1ab0191",
+            title: "Dashboard Changes",
+          },
+        ],
+      },
+    ],
   },
   boards: [
     {
       id: "36542010-0a05-4a98-bf6a-dd97d1ab0191",
       title: "Sample",
       color: "from-cyan-600 to-blue-600",
-      columns: [],
+      columns: [
+        {
+          id: "36542010-surya16-4a98-bf6a-dd97d1ab0191",
+          title: "TODO",
+          color: "",
+          tasks: [
+            {
+              id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
+              title: "UI Changes",
+            },
+          ],
+        },
+      ],
     },
     {
       id: "36542010-990-4a98-bf6a-dd97d1ab0191",
@@ -48,7 +78,7 @@ export const useBoardStore = create<TBoardStore>((set) => ({
           id: payload.id,
           title: payload.title,
           color: payload.color,
-          columns: [],
+          columns: payload.columns,
         },
       ],
       activeBoard: payload,
@@ -92,6 +122,50 @@ export const useBoardStore = create<TBoardStore>((set) => ({
 
       return {
         activeBoard: updatedActiveBoard,
+        boards: updatedBoards,
+      };
+    }),
+
+  deleteTask: (columnId: string, taskId: string) =>
+    set((state: TBoardStore) => {
+      const updatedColumns = state.activeBoard.columns.map((c: Column) =>
+        c.id === columnId
+          ? { ...c, tasks: c.tasks.filter((t: Task) => t.id !== taskId) }
+          : c
+      );
+
+      const updatedActiveBoard = {
+        ...state.activeBoard,
+        columns: updatedColumns,
+      };
+
+      const updatedBoards = state.boards.map((board: Board) =>
+        board.id === state.activeBoard.id ? updatedActiveBoard : board
+      );
+
+      return {
+        activeBoard: updatedActiveBoard,
+        boards: updatedBoards,
+      };
+    }),
+
+  deleteColumn: (columnId: string) =>
+    set((state: TBoardStore) => {
+      const updatedActiveColumn = state.activeBoard.columns.filter(
+        (column: Column) => column.id !== columnId
+      );
+
+      const updatedActiveState = {
+        ...state.activeBoard,
+        columns: updatedActiveColumn,
+      };
+
+      const updatedBoards = state.boards.map((b: Board) =>
+        b.id === state.activeBoard.id ? updatedActiveState : b
+      );
+
+      return {
+        activeBoard: updatedActiveState,
         boards: updatedBoards,
       };
     }),
