@@ -73,14 +73,14 @@ export const AddColumn = () => {
   };
 
   return (
-    <div className="px-6 pb-6 flex gap-5 overflow-x-auto items-start">
+    <div className="px-6 pb-6 flex gap-5 items-start ">
       {activeColumns?.map((column) => (
         <div
           key={column.id}
-          className="bg-white self-start min-w-[290px] rounded-xl flex flex-col"
+          className="bg-white self-start min-w-[290px] max-h-[calc(100vh-240px)] rounded-xl flex flex-col shrink-0"
         >
-          <div className="flex items-center px-4 py-3">
-            <div className="flex items-center gap-2 ">
+          <div className="flex items-center px-4 py-3 shrink-0">
+            <div className="flex items-center gap-2">
               <h3 className="text-lg font-semibold text-gray-800">
                 {column.title}
               </h3>
@@ -93,11 +93,15 @@ export const AddColumn = () => {
               className="ml-auto cursor-pointer"
             />
           </div>
-          <AddTask columnId={column.id} activeTasks={column.tasks} />
+
+          <div className="flex-1 overflow-y-auto px-2 pb-2 customScrollbar">
+            <AddTask columnId={column.id} activeTasks={column.tasks} />
+          </div>
         </div>
       ))}
+
       {isAddList ? (
-        <div className="bg-white w-[290px] p-3 rounded-xl h-[100px] ">
+        <div className="bg-white min-w-[300px] p-3 rounded-xl h-[120px] shrink-0 ">
           <TextField
             fullWidth
             required
@@ -141,9 +145,9 @@ export const AddColumn = () => {
       ) : (
         <div
           onClick={() => setIsAddList(true)}
-          className="min-w-[300px] h-[120px] bg-white/10 border-2 border-dashed border-white/30  rounded-2xl flex flex-col items-center justify-center gap-2 text-white  cursor-pointer transition-all duration-300 ease-in-out"
+          className="min-w-[300px] h-[120px] bg-white/10 border-2 border-dashed border-white/30 rounded-2xl flex flex-col items-center justify-center gap-2 text-white cursor-pointer transition-all duration-300 ease-in-out shrink-0 "
         >
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center ">
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
             <AddIcon />
           </div>
           <div>Add another list</div>

@@ -2,6 +2,8 @@ import { create } from "zustand";
 
 import { Boards, Board, Column, Task } from "../types/boardTypes";
 
+export type TaskUpdate = Partial<Omit<Task, "id" | "columnId">>;
+
 type TBoardStore = {
   boards: Boards;
   activeBoard: Board;
@@ -12,7 +14,11 @@ type TBoardStore = {
   addTask: (payload: Task, columnId: string) => void;
   deleteTask: (columnId: string, taskId: string) => void;
   deleteColumn: (columnId: string) => void;
-  editTask: (columnId: string, taskId: string) => void;
+  updateTask: (
+    columnId: string,
+    taskId: string,
+    updatedTask: TaskUpdate
+  ) => void;
 };
 
 export const useBoardStore = create<TBoardStore>((set) => ({
@@ -30,13 +36,7 @@ export const useBoardStore = create<TBoardStore>((set) => ({
             id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
             title: "UI Changes",
             priority: "high",
-            labels: ["High"],
-          },
-          {
-            id: "36542010-lek5-4a98-bf6a-dd97d1ab0191",
-            title: "Dashboard Changes",
-            priority: "medium",
-            labels: ["Medium"],
+            labels: ["high"],
           },
         ],
       },
@@ -56,8 +56,8 @@ export const useBoardStore = create<TBoardStore>((set) => ({
             {
               id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
               title: "UI Changes",
-              priority: "low",
-              labels: ["medium"],
+              priority: "high",
+              labels: ["high"],
             },
           ],
         },
@@ -178,6 +178,23 @@ export const useBoardStore = create<TBoardStore>((set) => ({
       };
     }),
 
-  editColumn: () => set({}),
-  editTask: () => set({}),
+  updateTask: (columnId, taskId, updatedTask) =>
+    set((state) => {
+      const newColumns = state.activeBoard.columns.map((col) => {
+        if (col.id !== columnId) return col;
+
+        const newTasks = col.tasks.map((task) =>
+          task.id === taskId ? { ...task, ...updatedTask } : task
+        );
+
+        return { ...col, tasks: newTasks };
+      });
+
+      return {
+        activeBoard: {
+          ...state.activeBoard,
+          columns: newColumns,
+        },
+      };
+    }),
 }));

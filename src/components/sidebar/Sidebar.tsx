@@ -64,7 +64,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="w-[260px]" style={{ background: darkShadeBg }}>
+    <div className="w-[20%]" style={{ background: darkShadeBg }}>
       <div className="flex p-4 border-b border-[#ffffff29] gap-2 items-center">
         <div className="bg-linear-to-r border from-cyan-500 to-blue-500 px-3.5 py-1.5 rounded-md font-semibold text-[#fff]">
           S

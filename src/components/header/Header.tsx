@@ -14,7 +14,7 @@ export const Header = () => {
   return (
     <header
       style={{ background: darkShadeBg }}
-      className="bg-white bg-opacity-10 backdrop-blur-lg border-b  px-6 py-4 flex justify-between items-center sticky top-0 z-50"
+      className="bg-white border-b border-[#ffffff29] bg-opacity-10 backdrop-blur-lg  px-6 py-4 flex justify-between items-center sticky top-0 z-50"
     >
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-orange-400 rounded-lg flex items-center justify-center text-lg">
@@ -30,8 +30,8 @@ export const Header = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="bg-white bg-opacity-15 border border-white border-opacity-20 rounded-xl px-4 py-3 w-80 focus:outline-none focus:scale-105 transition-all duration-300"
         />
-        <div className="w-10 h-10 bg-gradient-to-r from-teal-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold cursor-pointer hover:scale-110 transition-transform duration-200">
-          JD
+        <div className="w-10 h-10 bg-white/30  rounded-full flex items-center justify-center text-white font-semibold cursor-pointer hover:scale-110 transition-transform duration-200">
+          S
         </div>
       </div>
     </header>

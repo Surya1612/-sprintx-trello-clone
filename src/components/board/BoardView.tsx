@@ -6,7 +6,9 @@ export const BoardView = () => {
   const { title, color } = activeBoard;
 
   return (
-    <div className={`flex-1 min-h-screen  bg-gradient-to-r ${color} `}>
+    <div
+      className={`w-[80%] h-[calc(100vh-83px)] overflow-y-hidden overflow-x-auto  bg-gradient-to-r ${color} `}
+    >
       <div className="px-8 py-4 text-white">
         <h2 className="text-4xl font-bold mb-2 flex items-center gap-3">
           {title}
