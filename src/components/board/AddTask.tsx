@@ -1,13 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
-import { TextField } from "@mui/material";
+
 import { useState } from "react";
 import { useBoardStore } from "../../store/boardStore";
 import { Task } from "../../types/boardTypes";
 import { v4 as uuidv4 } from "uuid";
 
 import deleteIcon from "../../assets/trash.svg";
-import { DefaultModal } from "../common-components/modal/DefaultModal";
 import { getLabelClass, getPriorityBorder } from "../../utils/helpherFunction";
+import { UpdateTaskModal } from "./UpdateTaskModal";
 
 export const AddTask = ({
   columnId,
@@ -19,8 +19,7 @@ export const AddTask = ({
   const addNewTask = useBoardStore((state) => state.addTask);
   const deleteTask = useBoardStore((state) => state.deleteTask);
 
-  const [isAddTask, setIsAddTask] = useState(false);
-  const [taskTitle, setTaskTitle] = useState("");
+  const [editTaskId, setEditTaskId] = useState("");
 
   const handleNewTask = () => {
     const newTaskData: Task = {
@@ -30,17 +29,15 @@ export const AddTask = ({
       priority: "low",
     };
     addNewTask(newTaskData, columnId);
-    setTaskTitle("");
-    setIsAddTask(false);
   };
 
   const handleClose = () => {
-    setIsAddTask(false);
-    setTaskTitle("");
+    setEditTaskId("");
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    deleteTask(columnId, taskId as string);
+  const handleDeleteTask = (event: React.MouseEvent, taskId: string) => {
+    event.stopPropagation();
+    deleteTask(columnId, taskId);
   };
 
   return (
@@ -53,14 +50,15 @@ export const AddTask = ({
               className={`bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-pointer hover:transform hover:-translate-y-1 hover:shadow-md  transition-all duration-200 ${getPriorityBorder(
                 task.priority
               )}`}
+              onClick={() => setEditTaskId(task.id)}
             >
-              <div className="flex">
-                <h4 className="font-semibold text-gray-800 mb-2 leading-tight">
+              <div className="flex items-center gap-1 mb-2">
+                <h4 className="font-semibold text-gray-800  leading-tight">
                   {task.title}
                 </h4>
                 <img
                   src={deleteIcon}
-                  onClick={() => handleDeleteTask(task.id)}
+                  onClick={(e) => handleDeleteTask(e, task.id)}
                   className="ml-auto"
                   alt="delete"
                 />
@@ -92,34 +90,8 @@ export const AddTask = ({
         )}
       </div>
 
-      {isAddTask && (
-        <DefaultModal
-          title={"ADD TASK"}
-          handleClose={() => handleClose()}
-          submitProps={{
-            text: "ADD",
-            disableAction: !taskTitle,
-            handleSubmit: handleNewTask,
-          }}
-          dialogStyles={{ width: "500px", maxWidth: "500px" }}
-        >
-          <TextField
-            fullWidth
-            required
-            id="outlined-required"
-            onChange={(e) => setTaskTitle(e.target.value)}
-            value={taskTitle}
-            placeholder="Enter card title..."
-            sx={{
-              background: "#fff",
-              borderRadius: "4px",
-              ".MuiOutlinedInput-root	": {
-                height: "35px",
-                fontSize: "12px",
-              },
-            }}
-          />
-        </DefaultModal>
+      {editTaskId && (
+        <UpdateTaskModal onClose={handleClose} currentTaskId={editTaskId} />
       )}
 
       <div className="px-4 mb-4">

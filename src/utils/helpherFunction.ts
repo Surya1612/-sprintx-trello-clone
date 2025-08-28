@@ -1,4 +1,4 @@
-import { Priority } from "../types/boardTypes";
+import { Column, Priority } from "../types/boardTypes";
 
 export const getHeaderColor = (gradient: string): string => {
   const colors = gradient
@@ -47,4 +47,14 @@ export const getLabelClass = (label: string) => {
   return `px-2 py-1 rounded text-xs font-semibold uppercase ${
     classes[label] || "bg-gray-100 text-gray-600"
   }`;
+};
+
+export const findTaskById = (columns: Column[], taskId: string) => {
+  for (const column of columns) {
+    const task = column.tasks.find((t) => t.id === taskId);
+    if (task) {
+      return { task, columnId: column.id };
+    }
+  }
+  return null;
 };
