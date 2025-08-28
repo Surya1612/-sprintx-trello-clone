@@ -12,6 +12,7 @@ type TBoardStore = {
   addTask: (payload: Task, columnId: string) => void;
   deleteTask: (columnId: string, taskId: string) => void;
   deleteColumn: (columnId: string) => void;
+  editTask: (columnId: string, taskId: string) => void;
 };
 
 export const useBoardStore = create<TBoardStore>((set) => ({
@@ -28,10 +29,14 @@ export const useBoardStore = create<TBoardStore>((set) => ({
           {
             id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
             title: "UI Changes",
+            priority: "high",
+            labels: ["High"],
           },
           {
             id: "36542010-lek5-4a98-bf6a-dd97d1ab0191",
             title: "Dashboard Changes",
+            priority: "medium",
+            labels: ["Medium"],
           },
         ],
       },
@@ -51,6 +56,8 @@ export const useBoardStore = create<TBoardStore>((set) => ({
             {
               id: "36542010-sri5-4a98-bf6a-dd97d1ab0191",
               title: "UI Changes",
+              priority: "low",
+              labels: ["medium"],
             },
           ],
         },
@@ -70,6 +77,7 @@ export const useBoardStore = create<TBoardStore>((set) => ({
     }),
 
   setBoard: (payload: Boards) => set({ boards: payload }),
+
   addBoard: (payload: Board) =>
     set((state: TBoardStore) => ({
       boards: [
@@ -169,4 +177,7 @@ export const useBoardStore = create<TBoardStore>((set) => ({
         boards: updatedBoards,
       };
     }),
+
+  editColumn: () => set({}),
+  editTask: () => set({}),
 }));

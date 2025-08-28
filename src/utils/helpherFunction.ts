@@ -1,3 +1,5 @@
+import { Priority } from "../types/boardTypes";
+
 export const getHeaderColor = (gradient: string): string => {
   const colors = gradient
     .split(" to-")
@@ -22,4 +24,27 @@ export const getDarkerShade = (color: string) => {
   };
 
   return tailwindColorMap[color] || "gray-700";
+};
+
+export const getPriorityBorder = (priority: Priority): string => {
+  const borders = {
+    high: "border-l-4 border-red-500",
+    medium: "border-l-4 border-orange-500",
+    low: "border-l-4 border-green-500",
+  };
+  return borders[priority] || "border-l-4 border-green-500";
+};
+
+export const getLabelClass = (label: string) => {
+  const classes: Record<string, string> = {
+    high: "bg-red-100 text-red-600",
+    medium: "bg-orange-100 text-orange-600",
+    low: "bg-green-100 text-green-600",
+    feature: "bg-blue-100 text-blue-600",
+    bug: "bg-red-100 text-red-600",
+  };
+
+  return `px-2 py-1 rounded text-xs font-semibold uppercase ${
+    classes[label] || "bg-gray-100 text-gray-600"
+  }`;
 };

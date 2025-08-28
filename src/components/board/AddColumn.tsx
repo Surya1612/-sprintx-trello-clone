@@ -73,18 +73,24 @@ export const AddColumn = () => {
   };
 
   return (
-    <div className="p-4 flex w-max gap-4 ">
+    <div className="px-6 pb-6 flex gap-5 overflow-x-auto items-start">
       {activeColumns?.map((column) => (
         <div
           key={column.id}
-          className="bg-white self-start w-[290px] rounded-xl min-h-[120px] max-h-[100vh] flex flex-col"
+          className="bg-white self-start min-w-[290px] rounded-xl flex flex-col"
         >
-          <div className="flex items-center ">
-            <p className="p-3 font-semibold text-base">{column.title}</p>
-
+          <div className="flex items-center px-4 py-3">
+            <div className="flex items-center gap-2 ">
+              <h3 className="text-lg font-semibold text-gray-800">
+                {column.title}
+              </h3>
+              <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-xl text-xs font-semibold">
+                {column.tasks.length}
+              </span>
+            </div>
             <MoreHorizOutlinedIcon
               onClick={(e) => handleClick(e, column.id)}
-              className="ml-auto cursor-pointer mr-4"
+              className="ml-auto cursor-pointer"
             />
           </div>
           <AddTask columnId={column.id} activeTasks={column.tasks} />
@@ -134,11 +140,13 @@ export const AddColumn = () => {
         </div>
       ) : (
         <div
-          className="p-3 bg-[#ffffff33] h-[40px] flex items-center rounded-xl gap-2 w-[250px] cursor-pointer"
           onClick={() => setIsAddList(true)}
+          className="min-w-[300px] h-[120px] bg-white/10 border-2 border-dashed border-white/30  rounded-2xl flex flex-col items-center justify-center gap-2 text-white  cursor-pointer transition-all duration-300 ease-in-out"
         >
-          <AddIcon fontSize="small" sx={{ color: "#FFF" }} />
-          <p className="text-sm font-semibold text-white">Add a list</p>
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center ">
+            <AddIcon />
+          </div>
+          <div>Add another list</div>
         </div>
       )}
 
