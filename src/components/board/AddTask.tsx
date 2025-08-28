@@ -1,27 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Button, Menu, MenuItem, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
 import { useBoardStore } from "../../store/boardStore";
 import { Task } from "../../types/boardTypes";
 import { v4 as uuidv4 } from "uuid";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
-import editIcon from "../../assets/edit.svg";
 import deleteIcon from "../../assets/trash.svg";
-
-const taskOptions = [
-  {
-    id: "edit",
-    title: "Edit",
-    icon: editIcon,
-  },
-  {
-    id: "delete",
-    title: "Delete",
-    icon: deleteIcon,
-  },
-];
+import { DefaultModal } from "../common-components/modal/DefaultModal";
+import { getLabelClass, getPriorityBorder } from "../../utils/helpherFunction";
 
 export const AddTask = ({
   columnId,
@@ -35,15 +21,13 @@ export const AddTask = ({
 
   const [isAddTask, setIsAddTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
-  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
-
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
 
   const handleNewTask = () => {
     const newTaskData: Task = {
       id: uuidv4(),
-      title: taskTitle,
+      title: "New Task",
+      description: "click to edit this card",
+      priority: "low",
     };
     addNewTask(newTaskData, columnId);
     setTaskTitle("");
@@ -55,79 +39,70 @@ export const AddTask = ({
     setTaskTitle("");
   };
 
-  const handleClick = (event: React.MouseEvent<SVGElement>, taskId: string) => {
-    setAnchorEl(event.currentTarget as unknown as HTMLElement);
-    setCurrentTaskId(taskId);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setCurrentTaskId(null);
-  };
-
-  const handleDeleteTask = () => {
-    deleteTask(columnId, currentTaskId as string);
-    setAnchorEl(null);
+  const handleDeleteTask = (taskId: string) => {
+    deleteTask(columnId, taskId as string);
   };
 
   return (
-    <div>
-      <div className="flex flex-col gap-2 px-3 overflow-y-auto flex-grow">
+    <div className="">
+      <div className="space-y-4 mb-4 mt-1 px-4 ">
         {activeTasks.length > 0 ? (
-          activeTasks.map((task: Task, index) => (
+          activeTasks.map((task: Task) => (
             <div
-              key={index}
-              className="bg-gray-100 p-2 rounded-md shadow flex items-center"
+              key={task.id}
+              className={`bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-pointer hover:transform hover:-translate-y-1 hover:shadow-md  transition-all duration-200 ${getPriorityBorder(
+                task.priority
+              )}`}
             >
-              <p className="text-sm">{task.title}</p>
-              <MoreHorizOutlinedIcon
-                onClick={(e) => handleClick(e, task.id)}
-                className="ml-auto cursor-pointer"
-              />
+              <div className="flex">
+                <h4 className="font-semibold text-gray-800 mb-2 leading-tight">
+                  {task.title}
+                </h4>
+                <img
+                  src={deleteIcon}
+                  onClick={() => handleDeleteTask(task.id)}
+                  className="ml-auto"
+                  alt="delete"
+                />
+              </div>
+              <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                {task.description ?? "No description"}
+              </p>
+              <div className="flex justify-between items-center">
+                {task.labels && (
+                  <div className="flex gap-1.5">
+                    {task.labels.map((label, index) => (
+                      <span
+                        key={index}
+                        className={getLabelClass(label.toLowerCase())}
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="w-7 h-7 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                  S
+                </div>
+              </div>
             </div>
           ))
         ) : (
           <p className="text-gray-400 text-sm">No tasks available</p>
         )}
-
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-          sx={{
-            borderRadius: 6,
-            boxShadow:
-              "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-            "& .MuiMenu-list": {
-              padding: "4px 0",
-            },
-            "& .MuiMenuItem-root": {
-              width: "120px",
-            },
-          }}
-        >
-          {taskOptions.map((item) => (
-            <MenuItem
-              key={item.id}
-              disableRipple
-              sx={{ gap: "8px" }}
-              onClick={() =>
-                item.id === "edit" ? handleMenuClose() : handleDeleteTask()
-              }
-            >
-              <img src={item.icon} alt={item.title} />
-              {item.title}
-            </MenuItem>
-          ))}
-        </Menu>
       </div>
 
-      {isAddTask ? (
-        <div className="p-3">
+      {isAddTask && (
+        <DefaultModal
+          title={"ADD TASK"}
+          handleClose={() => handleClose()}
+          submitProps={{
+            text: "ADD",
+            disableAction: !taskTitle,
+            handleSubmit: handleNewTask,
+          }}
+          dialogStyles={{ width: "500px", maxWidth: "500px" }}
+        >
           <TextField
             fullWidth
             required
@@ -144,38 +119,18 @@ export const AddTask = ({
               },
             }}
           />
-          <div className="flex gap-2 items-center mt-2">
-            <Button
-              variant="contained"
-              size="small"
-              sx={{ textTransform: "capitalize" }}
-              disabled={!taskTitle}
-              onClick={() => handleNewTask()}
-            >
-              Add card
-            </Button>
-            <CloseIcon
-              fontSize="medium"
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "#F4F4F5",
-                  borderRadius: "8px",
-                },
-              }}
-              onClick={handleClose}
-            />
-          </div>
-        </div>
-      ) : (
-        <div
-          className="p-3 flex items-center rounded-xl gap-2 cursor-pointer"
-          onClick={() => setIsAddTask(true)}
-        >
-          <AddIcon fontSize="small" sx={{ color: "#172b4d" }} />
-          <p className="text-sm font-semibold text-[#172b4d]">Add a card</p>
-        </div>
+        </DefaultModal>
       )}
+
+      <div className="px-4 mb-4">
+        <div
+          onClick={() => handleNewTask()}
+          className="flex items-center p-3 bg-blue-500/10 border-2 border-dashed border-blue-500 rounded-xl text-blue-500 cursor-pointer transition-all duration-200 ease-in font-medium "
+        >
+          <AddIcon />
+          <p>Add a card</p>
+        </div>
+      </div>
     </div>
   );
 };
