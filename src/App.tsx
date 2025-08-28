@@ -5,9 +5,9 @@ import { Sidebar } from "./components/sidebar/Sidebar";
 
 function App() {
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <Header />
-      <div className="flex">
+      <div className="flex overflow-hidden h-[calc(100vh-83px)]">
         <Sidebar />
         <BoardView />
       </div>

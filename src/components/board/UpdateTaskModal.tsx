@@ -25,8 +25,9 @@ export const UpdateTaskModal = ({
   onClose,
   currentTaskId,
 }: UpdateTaskProps) => {
-  const activeColumns = useBoardStore((state) => state.activeBoard).columns;
-  const activeTask = findTaskById(activeColumns, currentTaskId);
+  const activeBoard = useBoardStore((state) => state.activeBoard);
+  const activeTask = findTaskById(activeBoard.columns, currentTaskId);
+  const updateTask = useBoardStore((state) => state.updateTask);
 
   const [title, setTitle] = useState(activeTask?.task?.title ?? "");
   const [description, setDescription] = useState(
@@ -40,18 +41,41 @@ export const UpdateTaskModal = ({
   );
 
   const availableLabels = ["high", "medium", "low"];
-
-  const toggleLabel = (label: string) => {
+  const toggleLabel = (label: string) =>
     setLabels((prev) =>
       prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
     );
+
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
+  const headerBgColor = getHeaderColor(activeBoard.color);
+  const darkShadeBg = getDarkerShade(headerBgColor);
+
+  const actionStyles = {
+    primary: {
+      whiteSpace: "nowrap",
+      background: darkShadeBg,
+      color: "#FFF",
+    },
+    secondary: {
+      border: 0,
+      color: "inherit",
+      background: "#e5e5e5",
+    },
   };
 
-  const activeBoard = useBoardStore((state) => state.activeBoard);
-  const { color } = activeBoard;
+  const handleUpdateTask = () => {
+    if (!activeTask) return;
 
-  const headerBgColor = getHeaderColor(color);
-  const darkShadeBg = getDarkerShade(headerBgColor);
+    updateTask(activeTask?.columnId, activeTask?.task.id, {
+      title,
+      description,
+      labels,
+      priority,
+    });
+    onClose();
+  };
 
   return (
     <DefaultModal
@@ -60,17 +84,10 @@ export const UpdateTaskModal = ({
       submitProps={{
         text: "Save",
         disableAction: !title.trim(),
-        handleSubmit: () => {},
+        handleSubmit: handleUpdateTask,
       }}
       dialogStyles={{ width: 500, maxWidth: 500 }}
-      actionStyles={{
-        primary: {
-          whiteSpace: "nowrap",
-          background: darkShadeBg,
-          color: "#FFF",
-        },
-        secondary: { border: 0, color: "inherit", background: "#e5e5e5" },
-      }}
+      actionStyles={actionStyles}
     >
       <TextField
         label="Title"
@@ -113,7 +130,7 @@ export const UpdateTaskModal = ({
             return (
               <Chip
                 key={label}
-                label={label.charAt(0).toUpperCase() + label.slice(1)}
+                label={capitalize(label)}
                 clickable
                 onClick={() => toggleLabel(label)}
                 color={isSelected ? "primary" : "default"}
