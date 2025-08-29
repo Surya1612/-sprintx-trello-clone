@@ -37,15 +37,20 @@ export const getPriorityBorder = (priority: Priority): string => {
 
 export const getLabelClass = (label: string) => {
   const classes: Record<string, string> = {
-    high: "bg-red-100 text-red-600",
-    medium: "bg-orange-100 text-orange-600",
-    low: "bg-green-100 text-green-600",
-    feature: "bg-blue-100 text-blue-600",
     bug: "bg-red-100 text-red-600",
+    feature: "bg-blue-100 text-blue-600",
+    enhancement: "bg-green-100 text-green-600",
+    research: "bg-purple-100 text-purple-600",
+    "ui/ux": "bg-pink-100 text-pink-600",
+    backend: "bg-yellow-100 text-yellow-600",
+    frontend: "bg-indigo-100 text-indigo-600",
+    blocked: "bg-gray-200 text-gray-700",
+    "in progress": "bg-orange-100 text-orange-600",
+    "review needed": "bg-teal-100 text-teal-600",
   };
 
   return `px-2 py-1 rounded text-xs font-semibold uppercase ${
-    classes[label] || "bg-gray-100 text-gray-600"
+    classes[label.toLowerCase()] || "bg-gray-100 text-gray-600"
   }`;
 };
 
