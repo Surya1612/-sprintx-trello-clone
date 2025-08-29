@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { Boards, Board, Column, Task } from "../types/boardTypes";
+import { DraggableLocation } from "@hello-pangea/dnd";
 
 export type TaskUpdate = Partial<Omit<Task, "id" | "columnId">>;
 
@@ -19,6 +20,8 @@ type TBoardStore = {
     taskId: string,
     updatedTask: TaskUpdate
   ) => void;
+
+  moveTask: (source: DraggableLocation, destination: DraggableLocation) => void;
 };
 
 export const useBoardStore = create<TBoardStore>((set) => ({
@@ -196,5 +199,21 @@ export const useBoardStore = create<TBoardStore>((set) => ({
           columns: newColumns,
         },
       };
+    }),
+  moveTask: (source, destination) =>
+    set((state) => {
+      const sourceCol = state.activeBoard.columns.find(
+        (c) => c.id === source.droppableId
+      );
+      const destCol = state.activeBoard.columns.find(
+        (c) => c.id === destination.droppableId
+      );
+      if (!sourceCol || !destCol) return state;
+
+      const [movedTask] = sourceCol.tasks.splice(source.index, 1);
+
+      destCol.tasks.splice(destination.index, 0, movedTask);
+
+      return { activeBoard: { ...state.activeBoard } };
     }),
 }));
