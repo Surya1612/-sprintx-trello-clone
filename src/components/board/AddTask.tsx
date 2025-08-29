@@ -27,7 +27,7 @@ export const AddTask = ({
     const newTaskData: Task = {
       id: uuidv4(),
       title: "New Task",
-      description: "click to edit this card",
+      description: "Add Description here..",
       priority: "low",
     };
     addNewTask(newTaskData, columnId);
@@ -59,7 +59,7 @@ export const AddTask = ({
                   onClick={() => setEditTaskId(task.id)}
                 >
                   <div className="flex items-center gap-1 mb-2">
-                    <h4 className="font-semibold text-gray-800 leading-tight">
+                    <h4 className="font-semibold text-gray-800 leading-tight truncate max-w-[170px]">
                       {task.title}
                     </h4>
                     <img
@@ -69,13 +69,15 @@ export const AddTask = ({
                       alt="delete"
                     />
                   </div>
-                  <p className="text-sm text-gray-600 mb-3 leading-relaxed">
-                    {task.description ?? "No description"}
+                  <p className="text-sm text-gray-600 mb-3 leading-relaxed max-w-[170px] truncate">
+                    {task.description?.trim()
+                      ? task.description
+                      : "No description"}
                   </p>
                   <div className="flex justify-between items-center">
-                    {task.labels && (
-                      <div className="flex gap-1.5">
-                        {task.labels.map((label, index) => (
+                    {task.labels && task.labels.length > 0 && (
+                      <div className="flex gap-1.5 items-center">
+                        {task.labels.slice(0, 2).map((label, index) => (
                           <span
                             key={index}
                             className={getLabelClass(label.toLowerCase())}
@@ -83,8 +85,15 @@ export const AddTask = ({
                             {label}
                           </span>
                         ))}
+
+                        {task.labels.length > 2 && (
+                          <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-200 text-gray-700">
+                            +{task.labels.length - 2}
+                          </span>
+                        )}
                       </div>
                     )}
+
                     <div className="w-7 h-7 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
                       S
                     </div>

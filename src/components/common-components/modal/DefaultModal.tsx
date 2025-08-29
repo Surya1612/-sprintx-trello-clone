@@ -16,7 +16,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 
 type DefaultModalProps = {
-  title: string | React.ReactNode;
+  title?: string | React.ReactNode;
   handleClose: () => void;
   children: React.ReactNode;
   showAction?: boolean;
@@ -127,6 +127,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
             className="w-28 h-10"
             style={{
               fontSize: "13px",
+              textTransform: "none",
               ...actionStyles.secondary,
             }}
             onClick={handleCancel}
@@ -138,6 +139,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
             style={{
               fontSize: "13px",
               whiteSpace: "nowrap",
+              textTransform: "none",
               ...actionStyles.primary,
             }}
             disabled={disableAction || loading}
