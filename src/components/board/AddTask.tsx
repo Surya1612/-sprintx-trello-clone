@@ -9,6 +9,8 @@ import deleteIcon from "../../assets/trash.svg";
 import { getLabelClass, getPriorityBorder } from "../../utils/helpherFunction";
 import { UpdateTaskModal } from "./UpdateTaskModal";
 
+import { Draggable } from "@hello-pangea/dnd";
+
 export const AddTask = ({
   columnId,
   activeTasks,
@@ -44,46 +46,52 @@ export const AddTask = ({
     <div className="">
       <div className="space-y-4 mb-4 mt-1 px-4 ">
         {activeTasks.length > 0 ? (
-          activeTasks.map((task: Task) => (
-            <div
-              key={task.id}
-              className={`bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-pointer hover:transform hover:-translate-y-1 hover:shadow-md  transition-all duration-200 ${getPriorityBorder(
-                task.priority
-              )}`}
-              onClick={() => setEditTaskId(task.id)}
-            >
-              <div className="flex items-center gap-1 mb-2">
-                <h4 className="font-semibold text-gray-800  leading-tight">
-                  {task.title}
-                </h4>
-                <img
-                  src={deleteIcon}
-                  onClick={(e) => handleDeleteTask(e, task.id)}
-                  className="ml-auto"
-                  alt="delete"
-                />
-              </div>
-              <p className="text-sm text-gray-600 mb-3 leading-relaxed">
-                {task.description ?? "No description"}
-              </p>
-              <div className="flex justify-between items-center">
-                {task.labels && (
-                  <div className="flex gap-1.5">
-                    {task.labels.map((label, index) => (
-                      <span
-                        key={index}
-                        className={getLabelClass(label.toLowerCase())}
-                      >
-                        {label}
-                      </span>
-                    ))}
+          activeTasks.map((task: Task, index: number) => (
+            <Draggable key={task.id} draggableId={task.id} index={index}>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  className={`bg-white rounded-xl p-4 shadow-sm border border-gray-200 cursor-pointer hover:transform hover:-translate-y-1 hover:shadow-md transition-all duration-200 ${getPriorityBorder(
+                    task.priority
+                  )}`}
+                  onClick={() => setEditTaskId(task.id)}
+                >
+                  <div className="flex items-center gap-1 mb-2">
+                    <h4 className="font-semibold text-gray-800 leading-tight">
+                      {task.title}
+                    </h4>
+                    <img
+                      src={deleteIcon}
+                      onClick={(e) => handleDeleteTask(e, task.id)}
+                      className="ml-auto"
+                      alt="delete"
+                    />
                   </div>
-                )}
-                <div className="w-7 h-7 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                  S
+                  <p className="text-sm text-gray-600 mb-3 leading-relaxed">
+                    {task.description ?? "No description"}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    {task.labels && (
+                      <div className="flex gap-1.5">
+                        {task.labels.map((label, index) => (
+                          <span
+                            key={index}
+                            className={getLabelClass(label.toLowerCase())}
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="w-7 h-7 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                      S
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )}
+            </Draggable>
           ))
         ) : (
           <p className="text-gray-400 text-sm">No tasks available</p>
